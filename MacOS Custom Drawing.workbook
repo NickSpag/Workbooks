@@ -1,0 +1,56 @@
+---
+uti: com.xamarin.workbook
+id: 8fe58541-1e86-4dee-b536-2efb455d6ebf
+title: MacOS Custom Drawing
+platforms:
+- MacMobile
+---
+
+```csharp
+using CoreGraphics;
+
+public class CustomDrawnView : NSView
+{
+        // Called when created from unmanaged code
+        public CustomDrawnView(IntPtr handle) : base(handle)
+        {
+            Initialize();
+        }
+
+        // Called when created directly from a XIB file
+        [Export("initWithCoder:")]
+        public CustomDrawnView(NSCoder coder) : base(coder)
+        {
+            Initialize();
+        }
+
+        public CustomDrawnView(CGRect rect): base(rect)
+        {
+            
+        }
+
+        // Shared initialization code
+        void Initialize()
+        {
+
+        }
+        
+        public override void DrawRect(CGRect dirtyRect)
+        {
+            var context = NSGraphicsContext.CurrentContext.CGContext;
+            context.SetStrokeColor(NSColor.Black.CGColor);
+            context.SetLineWidth(1);
+
+            var rectanglePath = CGPath.FromRoundedRect(new CGRect(10,10,100,100), 4, 4);
+            context.AddPath(rectanglePath);
+            context.StrokePath();
+        }
+}
+
+```
+
+```csharp
+var mainView = new CustomDrawnView(MainWindow.ContentView.Frame);
+
+MainWindow.ContentView = mainView;
+```
