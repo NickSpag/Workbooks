@@ -11,6 +11,8 @@ using CoreGraphics;
 
 public class CustomDrawnView : NSView
 {
+        private const bool useBezeirPath = true;
+
         // Called when created from unmanaged code
         public CustomDrawnView(IntPtr handle) : base(handle)
         {
@@ -26,7 +28,7 @@ public class CustomDrawnView : NSView
 
         public CustomDrawnView(CGRect rect): base(rect)
         {
-            
+
         }
 
         // Shared initialization code
@@ -37,13 +39,22 @@ public class CustomDrawnView : NSView
         
         public override void DrawRect(CGRect dirtyRect)
         {
-            var context = NSGraphicsContext.CurrentContext.CGContext;
-            context.SetStrokeColor(NSColor.Black.CGColor);
-            context.SetLineWidth(1);
-
-            var rectanglePath = CGPath.FromRoundedRect(new CGRect(10,10,100,100), 4, 4);
-            context.AddPath(rectanglePath);
-            context.StrokePath();
+            if(useBezeirPath)
+            {
+                NSColor.Red.Set();
+                NSBezierPath.StrokeLine(new CGPoint(10,10), new CGPoint(100,100));
+            }
+            else
+            {
+                var context = NSGraphicsContext.CurrentContext.CGContext;
+                context.SetStrokeColor(NSColor.Black.CGColor);
+                context.SetLineWidth(1);
+                
+                var rectangleCGPath = CGPath.FromRoundedRect(new CGRect(10,10,100,100), 4, 4);
+                
+                context.AddPath(rectangleCGPath);
+                context.StrokePath();
+            }
         }
 }
 
